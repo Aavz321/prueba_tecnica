@@ -1,4 +1,5 @@
 import { validateUser } from "../schemas/userSchema.js";
+import { LogModel } from "../models/mongodb/logMongodb.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
@@ -63,8 +64,13 @@ export class AuthController {
 
       const isValid = bcrypt.compareSync(result.data.password, user.password);
       if (!isValid) {
+        await LogModel.createLog("LOGIN_ATTEMPT_FAILED", user._id, {
+          reason: "Incorrect password",
+        });
         return res.status(401).json({ error: "Incorrect password" });
       }
+
+      await LogModel.createLog("LOGIN_SUCCESS", user._id, {});
 
       // Firma JWT
       const token = jwt.sign(
@@ -93,6 +99,9 @@ export class AuthController {
           userId: user._id,
         });
     } catch (error) {
+      await LogModel.createLog("LOGIN_ERROR", "anonymous", {
+        error: error.message,
+      });
       res
         .status(500)
         .json({ error: "Internal Server Error. Please try again later." });

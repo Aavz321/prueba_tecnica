@@ -29,4 +29,7 @@ export const createApp = ({ orderModel, authModel }) => {
   app.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`);
   });
+
+  //Para test deshabilitar listen y port
+  //return app;
 };

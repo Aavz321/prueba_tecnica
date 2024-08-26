@@ -1,4 +1,3 @@
-// tests/auth.test.js
 import request from "supertest";
 import { createApp } from "../../index.js";
 import { AuthModel } from "../models/mongodb/authMongodb.js";
