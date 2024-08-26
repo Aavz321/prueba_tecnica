@@ -1,13 +1,17 @@
 import { LogModel } from "../models/mongodb/logMongodb.js";
 import jwt from "jsonwebtoken";
 
+// Middleware para la gestión de logs
 export const loggingMiddleware = async (req, res, next) => {
   const originalJson = res.json;
+
+  // Sobrescribe res.json para capturar el cuerpo de la respuesta
   res.json = function (body) {
     res.locals.body = body;
     originalJson.call(this, body);
   };
 
+  // Cuando la respuesta se complete, registra el log
   res.on("finish", async () => {
     try {
       const token = req.cookies.access_token;

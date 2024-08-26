@@ -34,6 +34,7 @@ export class OrderController {
       return res.status(400).json({ error: JSON.parse(result.error.message) });
     }
 
+    // Manejo de error en model
     try {
       const order = await this.orderModel.createOrder({
         input: result.data,
@@ -60,8 +61,10 @@ export class OrderController {
       return res.status(403).json({ error: "Access not authorized" });
     }
 
+    // Validar token
     const data = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Manejo de error en model
     try {
       const order = await this.orderModel.getOrderById(orderId);
 
@@ -78,9 +81,11 @@ export class OrderController {
   };
 
   getOrdersByUser = async (req, res) => {
+    // Obtener userId y querys para filtro
     const { userId } = req.params;
     const { status, page, limit } = req.query;
 
+    // Manejo de error en model
     try {
       const result = await this.orderModel.getOrdersByUser(
         userId,
@@ -97,22 +102,27 @@ export class OrderController {
   };
 
   updateOrderStatus = async (req, res) => {
+    // Obtener userId
     const { orderId } = req.params;
 
+    // Validar token
     const token = req.cookies.access_token;
     if (!token) {
       return res.status(403).json({ error: "Access not authorized" });
     }
     const data = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Validar rol admin
     if (data.role != "admin") {
       return res
         .status(403)
         .json({ error: "Access not authorized, you are not an admin" });
     }
 
+    //validar de forma parcial el order para solo obtener el status
     const result = validatePartialOrder(req.body);
 
+    // Manejo de error en model
     try {
       const order = await this.orderModel.updateOrderStatus(
         orderId,

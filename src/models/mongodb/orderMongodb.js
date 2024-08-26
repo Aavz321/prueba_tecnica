@@ -2,8 +2,10 @@ import mongoose, { Schema } from "mongoose";
 import "dotenv/config.js";
 const uri = process.env.MONGO_URI;
 
+// Conexión a la base de datos MongoDB
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+// Definición de esquemas
 const ProductSchema = new Schema({
   brand: { type: String },
   name: { type: String },
@@ -31,11 +33,13 @@ const OrderSchema = new Schema({
   },
 });
 
+// Creación de modelos
 const Product = mongoose.model("Product", ProductSchema, "products");
 
 const Order = mongoose.model("Order", OrderSchema, "orders");
 
 export class OrderModel {
+  // Método para crear orden
   static async createOrder({ input }) {
     const order = new Order(input);
     const items = input.items;
@@ -72,6 +76,7 @@ export class OrderModel {
     return savedOrder;
   }
 
+  // Método para obtener orden por Id
   static async getOrderById(orderId) {
     const order = await Order.findById(orderId);
 
@@ -85,6 +90,7 @@ export class OrderModel {
     };
   }
 
+  // Método para obtener orden por usuario
   static async getOrdersByUser(userId, status = "", page = 1, limit = 10) {
     // Validar la paginación
     const pageNumber = parseInt(page, 10);
@@ -108,7 +114,7 @@ export class OrderModel {
     const orders = await Order.find(filter)
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .lean(); // .lean() para obtener objetos JavaScript planos
+      .lean();
 
     // Obtener el total de pedidos para proporcionar la paginación completa
     const totalOrders = await Order.countDocuments(filter);
@@ -122,6 +128,7 @@ export class OrderModel {
     };
   }
 
+  // Método para actualizar el estado de una orden dependiendo del rol
   static async updateOrderStatus(orderId, newStatus) {
     // Validar el estado
     const validStatuses = ["pendiente", "enviado", "completado"];

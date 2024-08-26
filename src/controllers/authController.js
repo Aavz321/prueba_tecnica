@@ -108,6 +108,7 @@ export class AuthController {
     }
   };
 
+  // Cerrar sesión eliminando cookie de acceso
   logout = async (req, res) => {
     res.clearCookie("access_token").json({ message: "Logout succesful" });
   };
