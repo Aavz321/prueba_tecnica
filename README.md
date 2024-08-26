@@ -131,6 +131,6 @@ npm test
 
 ## Contacto
 
-Tu Nombre - tu@email.com
+Albino Villanueva - ado.avz@gmail.com
 
-Link del proyecto: [https://github.com/tu-usuario/tu-repo](https://github.com/tu-usuario/tu-repo)
+Link del proyecto: [https://github.com/Aavz321/prueba_tecnica](https://github.com/Aavz321/prueba_tecnica)
